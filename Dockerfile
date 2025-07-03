@@ -20,5 +20,5 @@ RUN GOOS=linux GOARCH=amd64 go build -o main ./cmd/main.go
 EXPOSE 8080
 
 # 8. Start command
-CMD ["/app/main"]
+CMD ["./main"]
 

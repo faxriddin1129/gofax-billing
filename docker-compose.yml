@@ -1,4 +1,4 @@
-version: "1.0"
+version: "3.8"
 
 services:
   app:
@@ -12,10 +12,10 @@ services:
       - db
     environment:
       DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: 1129
-      DB_NAME: microservice
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
     volumes:
       - .:/app
     restart: always
@@ -23,9 +23,9 @@ services:
     image: postgres:15
     container_name: pg_microservice
     environment:
-      POSTGRES_DB: microservice
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1129
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
