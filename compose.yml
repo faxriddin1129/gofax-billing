@@ -1,0 +1,15 @@
+version: '3.2'
+services:
+  myapp:
+    build: cmd
+    ports:
+      - "8081:80"
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/cmd
+  pgsql:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER      = postgres
+      - POSTGRES_PASSWORD  = 1129
+      - POSTGRES_DB        = myshop

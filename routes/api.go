@@ -2,16 +2,12 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/controllers"
 )
 
-func UserRoutes(r *gin.Engine) {
-	users := r.Group("/users")
-	{
-		users.GET("/", controllers.GetUsers)
-		users.GET("/:id", controllers.GetUser)
-		users.POST("/", controllers.CreateUser)
-		users.PUT("/:id", controllers.UpdateUser)
-		users.DELETE("/:id", controllers.DeleteUser)
-	}
+func MainRoutes(r *gin.Engine) {
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Ping server",
+		})
+	})
 }
