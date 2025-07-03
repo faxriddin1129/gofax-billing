@@ -1,0 +1,8 @@
+# Ignore files/folders not needed in the container
+.git
+.gitignore
+tests
+storage/logs
+storage/cache
+*.md
+*.env
