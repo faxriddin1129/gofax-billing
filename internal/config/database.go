@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	db   *gorm.DB
+	Db   *gorm.DB
 	once sync.Once
 )
 
@@ -28,15 +28,15 @@ func DBConnect() {
 			log.Fatalf("Failed to connect to database: %v", err)
 		}
 
-		db = database
+		Db = database
 	})
 }
 
 func GetDB() *gorm.DB {
-	if db == nil {
+	if Db == nil {
 		log.Fatal("Database is not initialized. Call config.Connect() first.")
 	}
-	return db
+	return Db
 }
 
 func buildDSN() string {

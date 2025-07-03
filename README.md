@@ -17,7 +17,7 @@ go get github.com/joho/godotenv
 go get github.com/go-playground/validator/v10
 ```
 ```
-go get -u github.com/rs/cors
+go get github.com/gin-contrib/cors
 ```
 
 ### DATABASE `POSTGRESSQL`

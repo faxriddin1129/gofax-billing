@@ -1,8 +1,8 @@
-package console
+package jobs
 
 import "fmt"
 
-func main() {
+func call() {
 	//Call your functions here
 	sendMsgTelegram()
 }
