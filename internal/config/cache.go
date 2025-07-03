@@ -28,7 +28,7 @@ func Set(key string, value interface{}, duration time.Duration) bool {
 		Timestamp: time.Now().Add(duration),
 	}
 
-	filename := "runtime/cache/" + key + ".bin"
+	filename := "storage/cache/" + key + ".bin"
 
 	file, err := os.Create(filename)
 	if err != nil {
@@ -45,7 +45,7 @@ func Set(key string, value interface{}, duration time.Duration) bool {
 }
 
 func Get(key string) (interface{}, bool) {
-	filename := "runtime/cache/" + key + ".bin"
+	filename := "storage/cache/" + key + ".bin"
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -71,7 +71,7 @@ func Get(key string) (interface{}, bool) {
 
 func (c *Cache) Delete(key string) error {
 
-	filename := "runtime/cache/" + key + ".bin"
+	filename := "storage/cache/" + key + ".bin"
 
 	if err := os.Remove(filename); err != nil {
 		return fmt.Errorf("faylni o'chirishda xatolik: %v", err)
@@ -81,7 +81,7 @@ func (c *Cache) Delete(key string) error {
 }
 
 func (c *Cache) CleanUp() error {
-	cacheDir := "runtime/cache/"
+	cacheDir := "storage/cache/"
 
 	files, err := filepath.Glob(cacheDir + "*.bin")
 	if err != nil {
