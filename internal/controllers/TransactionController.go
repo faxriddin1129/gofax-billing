@@ -9,6 +9,6 @@ import (
 
 func Transactions(c *gin.Context) {
 	transactions := models.TransactionGetAll()
-	utils.RespondWithSuccess(c, transactions, http.StatusOK, "Ok")
+	utils.RespondJson(c, transactions, http.StatusOK, "Ok")
 	return
 }
