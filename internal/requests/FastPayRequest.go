@@ -11,7 +11,8 @@ import (
 type FastPayForm struct {
 	UserId   uint    `json:"UserId" validate:"required,gt=0"`
 	Amount   float64 `json:"Amount" validate:"required,gt=0"`
-	Provider string  `json:"Provider" validate:"required"`
+	Provider string  `json:"Provider" validate:"required,provider"`
+	Currency string  `json:"Currency" validate:"required,currency"`
 }
 
 func FastPayValidate(c *gin.Context) {
