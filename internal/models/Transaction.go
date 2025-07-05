@@ -20,6 +20,7 @@ type Transaction struct {
 	TransactionId uint    `json:"TransactionId" gorm:"type:int"`
 	Reason        int     `json:"Reason" gorm:"type:int"`
 	UUID          string  `json:"Uuid" gorm:"type:string"`
+	OrderId       string  `json:"OrderId" gorm:"type:string"`
 }
 
 func (Transaction) TableName() string {

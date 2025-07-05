@@ -19,6 +19,9 @@ go get github.com/go-playground/validator/v10
 ```
 go get github.com/gin-contrib/cors
 ```
+```
+go get github.com/google/uuid
+```
 
 ### DATABASE `POSTGRESSQL`
 Supports the latest version of Postgres!
