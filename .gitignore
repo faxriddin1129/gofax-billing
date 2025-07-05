@@ -1,3 +1,6 @@
-/.idea
-
+# phpstorm project files
+.idea
 .env
+
+# Mac DS_Store Files
+.DS_Store
