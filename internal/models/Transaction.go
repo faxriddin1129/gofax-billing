@@ -21,6 +21,7 @@ type Transaction struct {
 	Reason        int     `json:"Reason" gorm:"type:int"`
 	UUID          string  `json:"Uuid" gorm:"type:string"`
 	OrderId       string  `json:"OrderId" gorm:"type:string"`
+	ReturnUrl     string  `json:"ReturnUrl" gorm:"type:string"`
 }
 
 func (Transaction) TableName() string {

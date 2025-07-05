@@ -7,5 +7,9 @@ import (
 
 func MainRoutes(r *gin.Engine) {
 	r.GET("/", controllers.Welcome)
-	r.POST("/fast-pay", controllers.FastPay)
+
+	fp := r.Group("/fast-pay")
+	{
+		fp.POST("/get-link", controllers.FastPayGetLink)
+	}
 }

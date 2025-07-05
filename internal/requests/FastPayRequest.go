@@ -7,17 +7,19 @@ import (
 	"github.com/google/uuid"
 	"microservice/internal/constants"
 	"microservice/internal/models"
+	"microservice/internal/providers/click"
 	"microservice/pkg/utils"
 	"net/http"
 	"time"
 )
 
 type FastPayForm struct {
-	UserId   uint    `json:"UserId" validate:"required,gt=0"`
-	Amount   float64 `json:"Amount" validate:"required,gt=0"`
-	Provider string  `json:"Provider" validate:"required,provider"`
-	Currency string  `json:"Currency" validate:"required,currency"`
-	OrderId  string  `json:"OrderId" validate:"required,gt=0"`
+	UserId    uint    `json:"UserId" validate:"required,gt=0"`
+	Amount    float64 `json:"Amount" validate:"required,gt=0"`
+	Provider  string  `json:"Provider" validate:"required,provider"`
+	Currency  string  `json:"Currency" validate:"required,currency"`
+	OrderId   string  `json:"OrderId" validate:"required,gt=0"`
+	ReturnUrl string  `json:"ReturnUrl" validate:"url"`
 }
 
 func FastPayValidate(c *gin.Context) {
@@ -48,13 +50,14 @@ func FastPayValidate(c *gin.Context) {
 		Status:      constants.STATUS_PENDING,
 		Currency:    form.Currency,
 		Provider:    form.Provider,
-		Amount:      form.Amount * 100,
+		Amount:      form.Amount,
 		State:       constants.STATE_PENDING,
 		Reason:      constants.REASON_PENDING,
 		UUID:        uuid.New().String(),
 		CreateTime:  time.Now().Unix(),
 		PerformTime: time.Now().Unix(),
 		OrderId:     form.OrderId,
+		ReturnUrl:   form.ReturnUrl,
 	}
 
 	err = utils.DB.Create(&transaction).Error
@@ -63,6 +66,12 @@ func FastPayValidate(c *gin.Context) {
 		return
 	}
 
-	utils.RespondJson(c, transaction, http.StatusOK, "Transaction created successfully")
+	if transaction.Provider == constants.ProviderClick {
+		data := click.GenerateShopApiLink(&transaction)
+		utils.RespondJson(c, data, http.StatusOK, "FastPay successful")
+		return
+	}
+
+	utils.RespondJson(c, nil, http.StatusNotFound, "Provider not found or inactive")
 	return
 }
