@@ -1,8 +1,8 @@
 # ASIALUXE BILLING ````GOFAX````
 
-### USE PACKAGES
+### USE
 ```
-go get -u github.com/gorilla/mux
+go get -u github.com/gin-gonic/gin
 ```
 ```
 go get -u gorm.io/gorm
@@ -73,17 +73,17 @@ chmod +x myapp
 ## SERVER DEPLOY
 Create service file
 ```
-sudo nano /etc/systemd/system/myshop.service
+sudo nano /etc/systemd/system/myapp.service
 ```
 
 ```
 [Unit]
-Description=Go MyShop Application
+Description=Go MyApp Application
 After=network.target
 
 [Service]
-ExecStart=/home/myshop/myapp
-WorkingDirectory=/home/myshop
+ExecStart=/home/myapp/myapp
+WorkingDirectory=/home/myapp
 Restart=always
 User=ubuntu
 
@@ -94,17 +94,17 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 ```
 ```
-sudo systemctl enable myshop
+sudo systemctl enable myapp
 ```
 ```
-sudo systemctl start myshop
+sudo systemctl start myapp
 ```
 ```
-sudo systemctl status myshop
+sudo systemctl status myapp
 ```
 ```
-sudo systemctl stop myshop
+sudo systemctl stop myapp
 ```
 ```
-sudo systemctl restart myshop
+sudo systemctl restart myapp
 ```
