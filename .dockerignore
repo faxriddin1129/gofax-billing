@@ -4,5 +4,6 @@
 tests
 storage/logs
 storage/cache
+storage/app
 *.md
 *.env

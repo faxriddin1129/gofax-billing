@@ -6,6 +6,8 @@ import (
 	"log"
 	"microservice/internal/config"
 	"microservice/internal/migrations"
+	"microservice/pkg/bootstrap"
+	"microservice/pkg/env"
 	"microservice/pkg/utils"
 	"time"
 )
@@ -16,7 +18,17 @@ func init() {
 }
 
 func main() {
+	// LOAD ENVIRONMENTS
+	env.LoadEnv()
+
+	// GIN DEFAULT
 	r := gin.Default()
+
+	// GIN MODE
+	gin.SetMode(env.GetEnv("MODE"))
+
+	//LOGGER
+	r.Use(bootstrap.SetupErrorLogger())
 
 	// CORS middleware
 	r.Use(cors.New(cors.Config{
@@ -42,7 +54,8 @@ func main() {
 	config.RegisterRoutes(r)
 
 	// Start server
-	if err := r.Run(":8080"); err != nil {
+	port := env.GetEnv("PROJECT_PORT")
+	if err := r.Run(port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

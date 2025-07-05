@@ -7,7 +7,8 @@ import (
 	"github.com/google/uuid"
 	"microservice/internal/constants"
 	"microservice/internal/models"
-	"microservice/internal/providers/click"
+	"microservice/pkg/click"
+	"microservice/pkg/payme"
 	"microservice/pkg/utils"
 	"net/http"
 	"time"
@@ -19,6 +20,7 @@ type FastPayForm struct {
 	Provider  string  `json:"Provider" validate:"required,provider"`
 	Currency  string  `json:"Currency" validate:"required,currency"`
 	OrderId   string  `json:"OrderId" validate:"required,gt=0"`
+	ProductId string  `json:"ProductId" validate:"required,gt=0"`
 	ReturnUrl string  `json:"ReturnUrl" validate:"url"`
 }
 
@@ -58,6 +60,7 @@ func FastPayValidate(c *gin.Context) {
 		PerformTime: time.Now().Unix(),
 		OrderId:     form.OrderId,
 		ReturnUrl:   form.ReturnUrl,
+		ProductId:   form.ProductId,
 	}
 
 	err = utils.DB.Create(&transaction).Error
@@ -68,6 +71,12 @@ func FastPayValidate(c *gin.Context) {
 
 	if transaction.Provider == constants.ProviderClick {
 		data := click.GenerateShopApiLink(&transaction)
+		utils.RespondJson(c, data, http.StatusOK, "FastPay successful")
+		return
+	}
+
+	if transaction.Provider == constants.ProviderPayme {
+		data := payme.GenerateShopApiLink(&transaction)
 		utils.RespondJson(c, data, http.StatusOK, "FastPay successful")
 		return
 	}
