@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsiaLuxe - Billing System</title>
+    <link rel="icon" type="image/x-icon" href="https://asialuxe.uz/favicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            height: 48px;
+        }
+
+        nav {
+            display: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #2b7fff;
+        }
+
+        @media (min-width: 768px) {
+            nav {
+                display: block;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2b7fff 0%, #1e5bcc 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .about-text h3 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .about-text p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: #555;
+        }
+
+        .features-list li::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #2b7fff;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2b7fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .service-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(43, 127, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .service-card p {
+            color: #666;
+        }
+
+        /* Payment Methods */
+        .payment {
+            padding: 64px 0;
+            background: #f8f9fa;
+        }
+
+        .payment-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .payment-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .payment-logo {
+            width: 100px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+        .payment-logo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px!important;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: #2b7fff;
+            color: white;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 48px 0;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-logo {
+            height: 40px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: #ccc;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-contact {
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .footer-contact div {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <img src="https://b2b.asialuxe.uz/images/assets/logo.svg" alt="AsiaLuxe Logo" class="logo">
+            <nav>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Billing System</h1>
+        <p>Streamlining your financial operations with precision and reliability — the trusted billing solution for AsiaLuxe clients.</p>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+    <div class="container">
+        <div class="section-title">
+            <h2>About AsiaLuxe</h2>
+            <p>We are dedicated to providing exceptional luxury experiences and premium services throughout Asia, combining traditional excellence with modern innovation.</p>
+        </div>
+
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Our Mission</h3>
+                <p>At AsiaLuxe, we strive to deliver unparalleled quality and service to our valued customers. Our commitment to excellence drives everything we do, from product selection to customer care.</p>
+                <ul class="features-list">
+                    <li>Premium quality assurance</li>
+                    <li>Exceptional customer service</li>
+                    <li>Globally trusted</li>
+                </ul>
+            </div>
+            <div class="stats-card">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">7+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="services">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Services</h2>
+            <p>We offer a comprehensive range of premium services designed to exceed your expectations</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🌍</div>
+                <h3>Tour Packages</h3>
+                <p>Discover customized travel experiences tailored for your comfort and adventure.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🏨</div>
+                <h3>Hotel Booking</h3>
+                <p>Book top-rated hotels with the best deals and guaranteed comfort.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">✈️</div>
+                <h3>Flight Tickets</h3>
+                <p>Find and book flights at competitive rates, fast and hassle-free.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🚗</div>
+                <h3>Airport Transfers</h3>
+                <p>Reliable and timely transfer services to and from the airport, anywhere you go.</p>
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+</section>
+
+<!-- Payment Methods Section -->
+<section class="payment">
+    <div class="container">
+        <div class="section-title">
+            <h2>Accepted Payment Methods</h2>
+            <p>We accept all major payment methods for your convenience</p>
+        </div>
+
+        <div class="payment-grid">
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://humocard.uz/upload/medialibrary/208/8x0p9hi3h9jww0flwdm92dayhn0flulj/humo-logo-more.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://kdb.uz/storage/cards/October2021/hNE9Tjbf0qf181qpgGah.jpg">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfHJmEkEfDOaD5iZT5H1_qD9YtCfU1Z7BhULKvUKh_SfMbZSwbvZMQhD_Jf_Mn39xGMxg&usqp=CAU">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/2560px-MasterCard_Logo.svg.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://podrobno.uz/upload/iblock/e25/0r7zdrclrofiej8p6ui17xb8c48qmmad/7899.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://click.uz/click/images/click-white.jpg">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://uzumbank.uz/_nuxt/img/uzumbank-logo-light.f4c13a0.svg">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://octo.uz/libs/hinata/images/open-graph-image.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://bankxizmatlari.uz/upload/iblock/578/3vs3u1nff5s4lizncjzlljgd4ntfv9qd/InfinBank.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://cbu.uz/upload/iblock/205/ipak_en.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://main.yp.uz/uploads/organizations/main_photo/5b417d989c2aadfb748bc2da69e0494f.png">
+                </div>
+            </div>
+            <div class="payment-card">
+                <div class="payment-logo">
+                    <img src="https://cdn.worldvectorlogo.com/logos/bcc-bank.svg">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+    <div class="container">
+        <h2>Get In Touch</h2>
+        <p>Ready to experience luxury like never before? Contact us today and let us serve you with excellence.</p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <img src="https://asialuxe.uz/_ipx/w_160/images/logo/logo_white.svg" alt="AsiaLuxe Logo" class="footer-logo">
+            <p class="footer-text">Bringing luxury and excellence to you — anywhere in the world.</p>
+
+            <div class="footer-contact">
+                <div>Email: info@asialuxe.uz</div>
+                <div>Phone: +998 (71) 201-77-77</div>
+                <div>Address: Tashkent, Amir Temur Avenue, 24</div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 AsiaLuxe. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add scroll effect to header
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.backdropFilter = 'blur(10px)';
+        } else {
+            header.style.background = 'white';
+            header.style.backdropFilter = 'none';
+        }
+    });
+
+    // Animate stats on scroll
+    function animateStats() {
+        const stats = document.querySelectorAll('.stat-number');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const finalValue = target.textContent;
+                    const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+
+                    if (numericValue) {
+                        let current = 0;
+                        const increment = numericValue / 50;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= numericValue) {
+                                target.textContent = finalValue;
+                                clearInterval(timer);
+                            } else {
+                                target.textContent = Math.floor(current) + (finalValue.includes('+') ? '+' : '');
+                            }
+                        }, 30);
+                    }
+                    observer.unobserve(target);
+                }
+            });
+        });
+
+        stats.forEach(stat => observer.observe(stat));
+    }
+
+    // Initialize animations when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        animateStats();
+    });
+</script>
+</body>
+</html>
