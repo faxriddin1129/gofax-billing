@@ -7,7 +7,6 @@ import (
 )
 
 func GenerateShopApiLink(transaction *models.Transaction) interface{} {
-
 	merchantId := MERCHANT_ID
 	serviceUrl := SERVICE_URL
 	amount := strconv.FormatFloat(transaction.Amount, 'f', 2, 64)
@@ -18,7 +17,7 @@ func GenerateShopApiLink(transaction *models.Transaction) interface{} {
 	paramStr := "m=" + merchantId + ";ac.order_id=" + orderId + ";a=" + amount + ";c=" + returnUrl + ";l=" + language
 	encoded := base64.StdEncoding.EncodeToString([]byte(paramStr))
 	link := serviceUrl + "/" + encoded
-	
+
 	return map[string]interface{}{
 		"ID":     transaction.ID,
 		"Link":   link,

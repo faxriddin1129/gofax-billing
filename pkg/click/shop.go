@@ -6,7 +6,6 @@ import (
 )
 
 func GenerateShopApiLink(transaction *models.Transaction) interface{} {
-
 	amount := strconv.FormatFloat(transaction.Amount, 'f', 2, 64)
 	merchantId := MERCHANT_ID
 	merchantUserId := MERCHANT_USER_ID
