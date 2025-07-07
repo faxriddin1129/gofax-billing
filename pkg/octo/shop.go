@@ -72,8 +72,8 @@ func GenerateShopApiLinkByCard(transaction *models.Transaction) (interface{}, in
 	}
 
 	return map[string]interface{}{
-		"ID":     remoteLink.Data.RedirectURL,
-		"Link":   "link",
+		"ID":     transaction.ID,
+		"Link":   remoteLink.Data.RedirectURL,
 		"Method": "GET",
 	}, http.StatusOK, "FastPay successful"
 }
@@ -129,8 +129,8 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 	}
 
 	return map[string]interface{}{
-		"ID":     remote.Data.OctoPayURL,
-		"Link":   "link",
+		"ID":     transaction.ID,
+		"Link":   remote.Data.OctoPayURL,
 		"Method": "GET",
 	}, http.StatusOK, "FastPay successful"
 }
