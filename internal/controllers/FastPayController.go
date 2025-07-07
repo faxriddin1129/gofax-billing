@@ -8,3 +8,7 @@ import (
 func FastPayGetLink(c *gin.Context) {
 	requests.FastPayValidate(c)
 }
+
+func FastPayByCardGetLink(c *gin.Context) {
+	requests.FastPayByCardValidate(c)
+}

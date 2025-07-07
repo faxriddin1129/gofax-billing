@@ -20,9 +20,16 @@ type Transaction struct {
 	TransactionId uint    `json:"TransactionId" gorm:"type:int"`
 	Reason        int     `json:"Reason" gorm:"type:int"`
 	UUID          string  `json:"Uuid" gorm:"type:string"`
-	OrderId       string  `json:"OrderId" gorm:"type:string"`
-	ProductId     string  `json:"ProductId" gorm:"type:string"`
-	ReturnUrl     string  `json:"ReturnUrl" gorm:"type:string"`
+	OrderId       string  `json:"OrderId" gorm:"type:varchar(64)"`
+	ProductId     string  `json:"ProductId" gorm:"type:varchar(64)"`
+	ReturnUrl     string  `json:"ReturnUrl" gorm:"type:varchar(64)"`
+	Phone         string  `json:"Phone" gorm:"type:varchar(32)"`
+	Email         string  `json:"Email" gorm:"type:varchar(64)"`
+	UserId        uint    `json:"UserId"`
+	CardNumber    string  `json:"CardNumber"`
+	CardExpire    string  `json:"CardExpire"`
+	CardType      string  `json:"CardType"`
+	CardCvv       string  `json:"CardCvv"`
 }
 
 func (Transaction) TableName() string {

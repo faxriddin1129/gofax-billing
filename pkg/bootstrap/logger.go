@@ -15,7 +15,7 @@ func SetupErrorLogger() gin.HandlerFunc {
 
 	f, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		panic(fmt.Sprintf("Log fayl ochilmadi: %v", err))
+		panic(fmt.Sprintf("Log file not open: %v", err))
 	}
 
 	return gin.CustomRecoveryWithWriter(io.MultiWriter(f, os.Stderr), func(c *gin.Context, recovered interface{}) {

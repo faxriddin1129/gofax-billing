@@ -2,10 +2,11 @@ package click
 
 import (
 	"microservice/internal/models"
+	"net/http"
 	"strconv"
 )
 
-func GenerateShopApiLink(transaction *models.Transaction) interface{} {
+func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
 	amount := strconv.FormatFloat(transaction.Amount, 'f', 2, 64)
 	merchantId := MERCHANT_ID
 	merchantUserId := MERCHANT_USER_ID
@@ -20,5 +21,5 @@ func GenerateShopApiLink(transaction *models.Transaction) interface{} {
 		"ID":     transaction.ID,
 		"Link":   link,
 		"Method": "POST",
-	}
+	}, http.StatusOK, "FastPay successful"
 }

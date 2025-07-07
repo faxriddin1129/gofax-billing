@@ -7,28 +7,30 @@ import (
 	"github.com/google/uuid"
 	"microservice/internal/constants"
 	"microservice/internal/models"
-	"microservice/pkg/click"
 	"microservice/pkg/octo"
-	"microservice/pkg/payme"
 	"microservice/pkg/utils"
 	"net/http"
 	"time"
 )
 
-type FastPayForm struct {
-	UserId    uint    `json:"UserId" validate:"required,gt=0"`
-	Amount    float64 `json:"Amount" validate:"required,gt=0"`
-	Provider  string  `json:"Provider" validate:"required,provider"`
-	Currency  string  `json:"Currency" validate:"required,currency"`
-	OrderId   string  `json:"OrderId" validate:"required,gt=0"`
-	ProductId string  `json:"ProductId" validate:"required,gt=0"`
-	ReturnUrl string  `json:"ReturnUrl" validate:"url"`
-	Email     string  `json:"Email" validate:"required,email"`
-	Phone     string  `json:"Phone"`
+type FastPayByCardForm struct {
+	UserId     uint    `json:"UserId" validate:"required,gt=0"`
+	Amount     float64 `json:"Amount" validate:"required,gt=0"`
+	Provider   string  `json:"Provider" validate:"required,provider"`
+	Currency   string  `json:"Currency" validate:"required,currency"`
+	OrderId    string  `json:"OrderId" validate:"required,gt=0"`
+	ProductId  string  `json:"ProductId" validate:"required,gt=0"`
+	ReturnUrl  string  `json:"ReturnUrl" validate:"url"`
+	Email      string  `json:"Email" validate:"required,email"`
+	Phone      string  `json:"Phone"`
+	CardNumber string  `json:"CardNumber" validate:"required"`
+	CardExpire string  `json:"CardExpire" validate:"required"`
+	CardCvv    string  `json:"CardCvv"`
+	CardType   string  `json:"CardType" validate:"required"`
 }
 
-func FastPayValidate(c *gin.Context) {
-	var form FastPayForm
+func FastPayByCardValidate(c *gin.Context) {
+	var form FastPayByCardForm
 
 	if err := c.ShouldBindJSON(&form); err != nil {
 		utils.RespondJson(c, nil, http.StatusBadRequest, err.Error())
@@ -67,6 +69,10 @@ func FastPayValidate(c *gin.Context) {
 		Email:       form.Email,
 		Phone:       form.Phone,
 		UserId:      form.UserId,
+		CardNumber:  form.CardNumber,
+		CardExpire:  form.CardExpire,
+		CardCvv:     form.CardCvv,
+		CardType:    form.CardType,
 	}
 
 	err = utils.DB.Create(&transaction).Error
@@ -75,20 +81,8 @@ func FastPayValidate(c *gin.Context) {
 		return
 	}
 
-	if transaction.Provider == constants.ProviderClick {
-		data, code, msg := click.GenerateShopApiLink(&transaction)
-		utils.RespondJson(c, data, code, msg)
-		return
-	}
-
-	if transaction.Provider == constants.ProviderPayme {
-		data, code, msg := payme.GenerateShopApiLink(&transaction)
-		utils.RespondJson(c, data, code, msg)
-		return
-	}
-
 	if transaction.Provider == constants.ProviderOcto {
-		data, code, msg := octo.GenerateShopApiLink(&transaction)
+		data, code, msg := octo.GenerateShopApiLinkByCard(&transaction)
 		utils.RespondJson(c, data, code, msg)
 		return
 	}

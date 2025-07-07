@@ -3,10 +3,11 @@ package payme
 import (
 	"encoding/base64"
 	"microservice/internal/models"
+	"net/http"
 	"strconv"
 )
 
-func GenerateShopApiLink(transaction *models.Transaction) interface{} {
+func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
 	merchantId := MERCHANT_ID
 	serviceUrl := SERVICE_URL
 	amount := strconv.FormatFloat(transaction.Amount, 'f', 2, 64)
@@ -22,5 +23,5 @@ func GenerateShopApiLink(transaction *models.Transaction) interface{} {
 		"ID":     transaction.ID,
 		"Link":   link,
 		"Method": "GET",
-	}
+	}, http.StatusOK, "FastPay successful"
 }
