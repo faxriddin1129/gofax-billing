@@ -36,8 +36,13 @@ func (Transaction) TableName() string {
 	return "transactions"
 }
 
-func TransactionGetAll() []Transaction {
-	var transactions []Transaction
-	utils.DB.Find(&transactions)
-	return transactions
+func TransactionGetById(Id int64) Transaction {
+	var transaction Transaction
+	utils.DB.First(&transaction, Id)
+	return transaction
+}
+
+func TransactionUpdate(t *Transaction) (int64, error) {
+	res := utils.DB.Where("ID=?", t.ID).Updates(t)
+	return res.RowsAffected, res.Error
 }

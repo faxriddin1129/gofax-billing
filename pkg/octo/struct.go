@@ -25,3 +25,11 @@ type OctoPrepareGetLinkData struct {
 	UUID        string `json:"uuid"`
 	RedirectURL string `json:"redirectUrl"`
 }
+
+type OctoNotifyResponse struct {
+	ShopTransactionID string `json:"shop_transaction_id"`
+	OctoPaymentUUID   string `json:"octo_payment_UUID"`
+	Status            string `json:"status"`
+	Signature         string `json:"signature"`
+	HashKey           string `json:"hash_key"`
+}

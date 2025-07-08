@@ -1,10 +1,14 @@
 package octo
 
 import (
+	"github.com/gin-gonic/gin"
+	"microservice/internal/constants"
 	"microservice/internal/models"
 	"microservice/pkg/env"
+	"microservice/pkg/utils"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -133,4 +137,34 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 		"Link":   remote.Data.OctoPayURL,
 		"Method": "GET",
 	}, http.StatusOK, "FastPay successful"
+}
+
+func NotifyShopApi(form *OctoNotifyResponse, c *gin.Context) {
+
+	trId := strings.TrimPrefix(form.ShopTransactionID, "billing_")
+	trIdInt, _ := strconv.ParseInt(trId, 10, 64)
+
+	transaction := models.TransactionGetById(trIdInt)
+	if transaction.ID == 0 {
+		utils.RespondJson(c, nil, http.StatusNotFound, "Transaction not found")
+		return
+	}
+
+	if form.Status == "succeeded" {
+		transaction.Status = constants.STATUS_PAYED
+	}
+	if form.Status == "canceled" {
+		transaction.Status = constants.STATUS_CANCEL
+	}
+	if form.Status == "wait_user_action" || form.Status == "created" || form.Status == "waiting_for_capture" {
+		transaction.Status = constants.STATUS_PENDING
+	}
+	_, err := models.TransactionUpdate(&transaction)
+	if err != nil {
+		utils.RespondJson(c, nil, http.StatusInternalServerError, "Internal server error. Transaction failed save")
+		return
+
+	}
+
+	utils.RespondJson(c, nil, http.StatusOK, "Success fully")
 }
