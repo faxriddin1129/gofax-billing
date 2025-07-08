@@ -22,7 +22,7 @@ func MainRoutes(r *gin.Engine) {
 
 	payme := r.Group("/api/payme")
 	{
-		payme.POST("/notify", controllers.OctoShopApiNotify)
+		payme.POST("/notify", controllers.PaymeShopApiNotify)
 	}
 
 }

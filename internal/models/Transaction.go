@@ -42,6 +42,12 @@ func TransactionGetById(Id int64) Transaction {
 	return transaction
 }
 
+func TransactionGetByUUID(Id string) Transaction {
+	var transaction Transaction
+	utils.DB.Where("UUID = ?", Id).First(&transaction)
+	return transaction
+}
+
 func TransactionUpdate(t *Transaction) (int64, error) {
 	res := utils.DB.Where("ID=?", t.ID).Updates(t)
 	return res.RowsAffected, res.Error

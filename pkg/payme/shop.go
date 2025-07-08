@@ -2,9 +2,14 @@ package payme
 
 import (
 	"encoding/base64"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"microservice/internal/constants"
 	"microservice/internal/models"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
@@ -24,4 +29,244 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 		"Link":   link,
 		"Method": "GET",
 	}, http.StatusOK, "FastPay successful"
+}
+
+func NotifyShopApi(form *PaymeRequest, c *gin.Context) {
+
+	basic := "Paycom:" + TEST_KEY
+	if !CheckAuthHeader(c, basic) {
+		c.JSON(http.StatusOK, NoAuth())
+		return
+	}
+
+	switch form.Method {
+	case "CheckPerformTransaction":
+		CheckPerformTransaction(form, c)
+	case "CreateTransaction":
+		CreateTransaction(form, c)
+	case "PerformTransaction":
+		PerformTransaction(form, c)
+	case "CancelTransaction":
+		CancelTransaction(form, c)
+	case "CheckTransaction":
+		CheckTransaction(form, c)
+	default:
+		c.JSON(http.StatusOK, NotFound())
+	}
+}
+
+func CheckPerformTransaction(form *PaymeRequest, c *gin.Context) {
+
+	if form.Params.Account.OrderId == "" {
+		c.JSON(http.StatusOK, NotParam())
+		return
+	}
+
+	orderID, _ := strconv.ParseInt(form.Params.Account.OrderId, 10, 64)
+	if orderID == 0 {
+		c.JSON(http.StatusOK, NotParam())
+		return
+	}
+
+	transaction := models.TransactionGetById(orderID)
+	if transaction.ID == 0 {
+		c.JSON(http.StatusOK, NotFound())
+		return
+	}
+
+	if transaction.PaymentStatus == 1 {
+		c.JSON(http.StatusOK, NotFound())
+		return
+	}
+
+	if transaction.State == -2 {
+		c.JSON(http.StatusOK, Canceled(&transaction))
+		return
+	}
+
+	if form.Params.Amount != transaction.Amount {
+		c.JSON(http.StatusOK, NotCorrectAmount())
+		return
+	}
+
+	transaction.CreateTime = 0
+	transaction.UUID = ""
+	transaction.PerformTime = 0
+	transaction.CancelTime = 0
+	transaction.Status = constants.STATE_FAIL
+	transaction.Reason = constants.REASON_FAIL
+	_, err := models.TransactionUpdate(&transaction)
+
+	fmt.Println(err)
+
+	c.JSON(http.StatusOK, Success())
+	return
+}
+
+func CreateTransaction(form *PaymeRequest, c *gin.Context) {
+	timeMillis := time.Now().UnixNano() / int64(time.Millisecond)
+	uuid := form.Params.ID
+	orderID, _ := strconv.ParseInt(form.Params.Account.OrderId, 10, 64)
+	if orderID == 0 {
+		c.JSON(http.StatusOK, NotParam())
+		return
+	}
+
+	transaction := models.TransactionGetById(orderID)
+	if transaction.Amount != form.Params.Amount {
+		c.JSON(http.StatusOK, NotCorrectAmount())
+		return
+	}
+	if transaction.State == -2 {
+		c.JSON(http.StatusOK, Canceled(&transaction))
+		return
+	}
+	if transaction.State == 1 && transaction.UUID != uuid {
+		c.JSON(http.StatusOK, Pending())
+		return
+	}
+
+	if transaction.State == 1 {
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"result": map[string]interface{}{
+				"create_time": transaction.CreateTime,
+				"transaction": strconv.Itoa(int(transaction.ID)),
+				"state":       transaction.State,
+			},
+		})
+		return
+	}
+
+	if transaction.ID == 0 {
+		c.JSON(http.StatusOK, NotFound())
+		return
+	}
+
+	transaction.CreateTime = timeMillis
+	transaction.UUID = uuid
+	transaction.State = 1
+	_, _ = models.TransactionUpdate(&transaction)
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"result": map[string]interface{}{
+			"create_time": timeMillis,
+			"transaction": strconv.Itoa(int(transaction.ID)),
+			"state":       transaction.State,
+		},
+	})
+}
+
+func PerformTransaction(form *PaymeRequest, c *gin.Context) {
+
+	transaction := models.TransactionGetByUUID(form.Params.ID)
+	if transaction.ID == 0 {
+		c.JSON(http.StatusOK, NotFound())
+		return
+	}
+
+	if transaction.State == -2 {
+		c.JSON(http.StatusOK, Canceled(&transaction))
+		return
+	}
+
+	timeMillis := time.Now().UnixNano() / int64(time.Millisecond)
+	if transaction.PerformTime == 0 {
+		transaction.PerformTime = timeMillis
+		transaction.State = 2
+		transaction.PaymentStatus = 1
+		_, _ = models.TransactionUpdate(&transaction)
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"result": map[string]interface{}{
+			"perform_time": transaction.PerformTime,
+			"transaction":  strconv.Itoa(int(transaction.ID)),
+			"state":        transaction.State,
+		},
+	})
+}
+
+func CheckTransaction(form *PaymeRequest, c *gin.Context) {
+
+	trId := form.Params.ID
+	transaction := models.TransactionGetByUUID(trId)
+
+	if transaction.ID != 0 {
+		if transaction.Status == -2 {
+			c.JSON(http.StatusOK, Canceled(&transaction))
+			return
+		} else {
+			var reason interface{}
+			reason = transaction.Reason
+			if transaction.Reason == 0 {
+				reason = nil
+			}
+			c.JSON(http.StatusOK, map[string]interface{}{
+				"result": map[string]interface{}{
+					"create_time":  transaction.CreateTime,
+					"perform_time": transaction.PerformTime,
+					"cancel_time":  transaction.CancelTime,
+					"transaction":  strconv.Itoa(int(transaction.ID)),
+					"state":        transaction.State,
+					"reason":       reason,
+				},
+			})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, NotFound())
+}
+
+func CancelTransaction(form *PaymeRequest, c *gin.Context) {
+	timeMillis := time.Now().UnixNano() / int64(time.Millisecond)
+	uuid := form.Params.ID
+	transaction := models.TransactionGetByUUID(uuid)
+	if transaction.ID != 0 {
+		if transaction.CancelTime == 0 {
+			if transaction.PaymentStatus == 0 {
+				transaction.State = -1
+			} else {
+				transaction.State = -2
+			}
+			transaction.CancelTime = timeMillis
+			transaction.Reason = form.Params.Reason
+			res, err := models.TransactionUpdate(&transaction)
+			fmt.Println(res)
+			fmt.Println(err)
+		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"result": map[string]interface{}{
+				"cancel_time": transaction.CancelTime,
+				"transaction": strconv.Itoa(int(transaction.ID)),
+				"state":       transaction.State,
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, NotFound())
+}
+
+func CheckAuthHeader(c *gin.Context, expectedKey string) bool {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return false
+	}
+
+	if strings.HasPrefix(strings.ToLower(authHeader), "basic ") {
+		encoded := strings.TrimSpace(authHeader[6:])
+		decodedBytes, err := base64.StdEncoding.DecodeString(encoded)
+		if err != nil {
+			return false
+		}
+
+		decoded := string(decodedBytes)
+		if decoded != expectedKey {
+			return false
+		}
+
+		return true
+	}
+
+	return false
 }
