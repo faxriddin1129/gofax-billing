@@ -25,4 +25,9 @@ func MainRoutes(r *gin.Engine) {
 		payme.POST("/notify", controllers.PaymeShopApiNotify)
 	}
 
+	click := r.Group("/api/click")
+	{
+		click.POST("/notify-prepare", controllers.PaymeShopApiNotify)
+		click.POST("/notify-complete", controllers.PaymeShopApiNotify)
+	}
 }
