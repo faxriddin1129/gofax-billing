@@ -93,8 +93,8 @@ func CheckPerformTransaction(form *PaymeRequest, c *gin.Context) {
 	transaction.UUID = ""
 	transaction.PerformTime = 0
 	transaction.CancelTime = 0
-	transaction.Status = constants.STATE_FAIL
-	transaction.Reason = constants.REASON_FAIL
+	transaction.Status = 0
+	transaction.Reason = 0
 	_, err := models.TransactionUpdate(&transaction)
 
 	fmt.Println(err)
@@ -173,6 +173,7 @@ func PerformTransaction(form *PaymeRequest, c *gin.Context) {
 		transaction.PerformTime = timeMillis
 		transaction.State = 2
 		transaction.PaymentStatus = 1
+		transaction.Status = constants.STATUS_SUCCESS
 		_, _ = models.TransactionUpdate(&transaction)
 	}
 
@@ -230,6 +231,7 @@ func CancelTransaction(form *PaymeRequest, c *gin.Context) {
 			}
 			transaction.CancelTime = timeMillis
 			transaction.Reason = form.Params.Reason
+			transaction.Status = constants.STATUS_CANCEL
 			res, err := models.TransactionUpdate(&transaction)
 			fmt.Println(res)
 			fmt.Println(err)

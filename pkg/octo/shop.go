@@ -151,7 +151,7 @@ func NotifyShopApi(form *OctoNotifyResponse, c *gin.Context) {
 	}
 
 	if form.Status == "succeeded" {
-		transaction.Status = constants.STATUS_PAYED
+		transaction.Status = constants.STATUS_SUCCESS
 	}
 	if form.Status == "canceled" {
 		transaction.Status = constants.STATUS_CANCEL
@@ -163,7 +163,6 @@ func NotifyShopApi(form *OctoNotifyResponse, c *gin.Context) {
 	if err != nil {
 		utils.RespondJson(c, nil, http.StatusInternalServerError, "Internal server error. Transaction failed save")
 		return
-
 	}
 
 	utils.RespondJson(c, nil, http.StatusOK, "Success fully")
