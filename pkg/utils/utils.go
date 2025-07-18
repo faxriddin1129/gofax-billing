@@ -3,26 +3,11 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 )
-
-func ParseBody(r *http.Request, v interface{}) {
-	reqBody, _ := io.ReadAll(r.Body)
-	err := r.Body.Close()
-	if err != nil {
-		panic(err)
-	}
-	err = json.Unmarshal(reqBody, v)
-	if err != nil {
-		panic(err)
-	}
-}
 
 func GenerateToken(id string) string {
 	bytes := make([]byte, 16)
