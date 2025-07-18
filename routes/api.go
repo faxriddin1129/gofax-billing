@@ -15,19 +15,12 @@ func MainRoutes(r *gin.Engine) {
 		fp.POST("/get-link-by-card", controllers.FastPayByCardGetLink)
 	}
 
-	octo := r.Group("/api/octo")
+	notify := r.Group("/api")
 	{
-		octo.POST("/notify", controllers.OctoShopApiNotify)
-	}
-
-	payme := r.Group("/api/payme")
-	{
-		payme.POST("/notify", controllers.PaymeShopApiNotify)
-	}
-
-	click := r.Group("/api/click")
-	{
-		click.POST("/notify-prepare", controllers.PaymeShopApiNotify)
-		click.POST("/notify-complete", controllers.PaymeShopApiNotify)
+		notify.POST("/octo/notify", controllers.OctoShopApiNotify)
+		notify.POST("/payme/notify", controllers.PaymeShopApiNotify)
+		notify.POST("/click/notify-prepare", controllers.PaymeShopApiNotify)
+		notify.POST("/click/notify-complete", controllers.PaymeShopApiNotify)
+		notify.POST("/uzum/notify", controllers.OctoShopApiNotify)
 	}
 }
