@@ -30,6 +30,7 @@ type Transaction struct {
 	CardExpire    string  `json:"CardExpire"`
 	CardType      string  `json:"CardType"`
 	CardCvv       string  `json:"CardCvv"`
+	Platform      string  `json:"Platform"`
 }
 
 func (Transaction) TableName() string {

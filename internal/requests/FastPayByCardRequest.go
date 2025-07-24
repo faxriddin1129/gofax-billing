@@ -27,6 +27,7 @@ type FastPayByCardForm struct {
 	CardExpire string  `json:"CardExpire" validate:"required"`
 	CardCvv    string  `json:"CardCvv"`
 	CardType   string  `json:"CardType" validate:"required"`
+	Platform   string  `json:"Platform" validate:"required,gt=0"`
 }
 
 func FastPayByCardValidate(c *gin.Context) {
@@ -73,6 +74,7 @@ func FastPayByCardValidate(c *gin.Context) {
 		CardExpire:  form.CardExpire,
 		CardCvv:     form.CardCvv,
 		CardType:    form.CardType,
+		Platform:    form.Platform,
 	}
 
 	err = utils.DB.Create(&transaction).Error

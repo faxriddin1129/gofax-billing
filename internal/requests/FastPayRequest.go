@@ -21,6 +21,7 @@ type FastPayForm struct {
 	Provider  string  `json:"Provider" validate:"required,provider"`
 	Currency  string  `json:"Currency" validate:"required,currency"`
 	OrderId   string  `json:"OrderId" validate:"required,gt=0"`
+	Platform  string  `json:"Platform" validate:"required,gt=0"`
 	ProductId string  `json:"ProductId" validate:"required,gt=0"`
 	ReturnUrl string  `json:"ReturnUrl" validate:"url"`
 	Email     string  `json:"Email" validate:"required,email"`
@@ -67,6 +68,7 @@ func FastPayValidate(c *gin.Context) {
 		Email:       form.Email,
 		Phone:       form.Phone,
 		UserId:      form.UserId,
+		Platform:    form.Platform,
 	}
 
 	err = utils.DB.Create(&transaction).Error
