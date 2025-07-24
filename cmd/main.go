@@ -21,14 +21,14 @@ func main() {
 	// LOAD ENVIRONMENTS
 	env.LoadEnv()
 
+	// GIN MODE
+	gin.SetMode(env.GetEnv("GIN_MODE"))
+
 	// GIN DEFAULT
 	r := gin.Default()
 
-	// GIN MODE
-	gin.SetMode(env.GetEnv("MODE"))
-
 	//LOGGER
-	r.Use(bootstrap.SetupErrorLogger())
+	r.Use(bootstrap.RequestResponseLogger())
 
 	// CORS middleware
 	r.Use(cors.New(cors.Config{
