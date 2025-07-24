@@ -2,8 +2,8 @@ package requests
 
 import (
 	"github.com/go-playground/validator/v10"
+	"gofax-billing/internal/constants"
 	"log"
-	"microservice/internal/constants"
 )
 
 var validate = validator.New()

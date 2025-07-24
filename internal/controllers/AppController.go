@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/pkg/utils"
+	"gofax-billing/pkg/utils"
 )
 
 func Welcome(c *gin.Context) {

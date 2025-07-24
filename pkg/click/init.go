@@ -1,7 +1,7 @@
 package click
 
 import (
-	"microservice/pkg/env"
+	"gofax-billing/pkg/env"
 )
 
 var (

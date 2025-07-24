@@ -1,4 +1,4 @@
-module microservice
+module gofax-billing
 
 go 1.23.2
 

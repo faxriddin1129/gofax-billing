@@ -1,8 +1,8 @@
 package models
 
 import (
+	"gofax-billing/pkg/utils"
 	"gorm.io/gorm"
-	"microservice/pkg/utils"
 )
 
 type Transaction struct {

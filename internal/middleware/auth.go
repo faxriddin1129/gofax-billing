@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"microservice/internal/models"
+	"gofax-billing/internal/models"
 	"net/http"
 	"strings"
 

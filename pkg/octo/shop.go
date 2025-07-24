@@ -2,10 +2,10 @@ package octo
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/internal/constants"
-	"microservice/internal/models"
-	"microservice/pkg/env"
-	"microservice/pkg/utils"
+	"gofax-billing/internal/constants"
+	"gofax-billing/internal/models"
+	"gofax-billing/pkg/env"
+	"gofax-billing/pkg/utils"
 	"net/http"
 	"strconv"
 	"strings"

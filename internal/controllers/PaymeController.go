@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/pkg/payme"
-	"microservice/pkg/utils"
+	"gofax-billing/pkg/payme"
+	"gofax-billing/pkg/utils"
 	"net/http"
 )
 

@@ -1,7 +1,7 @@
 package click
 
 import (
-	"microservice/internal/models"
+	"gofax-billing/internal/models"
 	"net/http"
 	"strconv"
 )

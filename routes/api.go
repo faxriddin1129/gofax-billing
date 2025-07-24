@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/internal/controllers"
+	"gofax-billing/internal/controllers"
 )
 
 func MainRoutes(r *gin.Engine) {

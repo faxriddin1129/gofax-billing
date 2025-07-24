@@ -3,12 +3,12 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gofax-billing/internal/config"
+	"gofax-billing/internal/migrations"
+	"gofax-billing/pkg/bootstrap"
+	"gofax-billing/pkg/env"
+	"gofax-billing/pkg/utils"
 	"log"
-	"microservice/internal/config"
-	"microservice/internal/migrations"
-	"microservice/pkg/bootstrap"
-	"microservice/pkg/env"
-	"microservice/pkg/utils"
 	"time"
 )
 

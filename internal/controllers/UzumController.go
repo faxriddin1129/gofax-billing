@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/pkg/octo"
-	"microservice/pkg/utils"
+	"gofax-billing/pkg/octo"
+	"gofax-billing/pkg/utils"
 	"net/http"
 )
 

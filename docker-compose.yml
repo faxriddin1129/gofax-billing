@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: go_microservice
+    container_name: go_go_fax-billing
     ports:
       - "8080:8080"
     depends_on:
@@ -21,7 +21,7 @@ services:
     restart: always
   db:
     image: postgres:15
-    container_name: pg_microservice
+    container_name: pg_go_fax-billing
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}

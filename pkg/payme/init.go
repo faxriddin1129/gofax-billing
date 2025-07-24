@@ -1,7 +1,7 @@
 package payme
 
 import (
-	"microservice/pkg/env"
+	"gofax-billing/pkg/env"
 )
 
 var (

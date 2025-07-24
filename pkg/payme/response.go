@@ -1,7 +1,7 @@
 package payme
 
 import (
-	"microservice/internal/models"
+	"gofax-billing/internal/models"
 	"strconv"
 )
 

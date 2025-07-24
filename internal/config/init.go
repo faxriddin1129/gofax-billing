@@ -1,6 +1,6 @@
 package config
 
-import "microservice/pkg/env"
+import "gofax-billing/pkg/env"
 
 func init() {
 	// LOAD ENVIRONMENTS

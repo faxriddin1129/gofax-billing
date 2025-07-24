@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"microservice/internal/requests"
+	"gofax-billing/internal/requests"
 )
 
 func FastPayGetLink(c *gin.Context) {

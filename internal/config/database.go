@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
+	"gofax-billing/pkg/env"
 	"log"
-	"microservice/pkg/env"
 	"sync"
 
 	"gorm.io/driver/postgres"
