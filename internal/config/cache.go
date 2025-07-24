@@ -22,7 +22,7 @@ type cacheItem struct {
 	Timestamp time.Time
 }
 
-func Set(key string, value interface{}, duration time.Duration) bool {
+func CacheSet(key string, value interface{}, duration time.Duration) bool {
 	item := cacheItem{
 		Value:     value,
 		Timestamp: time.Now().Add(duration),
@@ -44,7 +44,7 @@ func Set(key string, value interface{}, duration time.Duration) bool {
 	return true
 }
 
-func Get(key string) (interface{}, bool) {
+func CacheGet(key string) (interface{}, bool) {
 	filename := "storage/cache/" + key + ".bin"
 
 	file, err := os.Open(filename)
@@ -69,7 +69,7 @@ func Get(key string) (interface{}, bool) {
 	return item.Value, true
 }
 
-func (c *Cache) Delete(key string) error {
+func (c *Cache) CacheDelete(key string) error {
 
 	filename := "storage/cache/" + key + ".bin"
 
@@ -80,7 +80,7 @@ func (c *Cache) Delete(key string) error {
 	return nil
 }
 
-func (c *Cache) CleanUp() error {
+func (c *Cache) CacheCleanUp() error {
 	cacheDir := "storage/cache/"
 
 	files, err := filepath.Glob(cacheDir + "*.bin")

@@ -33,17 +33,17 @@ Uses `.bin` files!
 ### Cache Set
 Use the `Set` method to store data in the cache. You can set a specific expiration time for the cached data.
 ```
-cache.Set("cache_key", data, 1*time.Hour)
+config.CacheSet("cache_key", data, 1*time.Hour)
 ```
 ### Cache GET
 Use the `Get` method to retrieve data from the cache.
 ```
-cache.Get("cache_key")
+config.CacheGet("cache_key")
 ```
 ### Cache Delete
 To delete the data in the cache, use the `Delete` method.
 ```
-cache.Delete("cache_key")
+config.CacheDelete("cache_key")
 ```
 ## Update packages
 ```
