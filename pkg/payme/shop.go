@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gofax-billing/internal/constants"
 	"gofax-billing/internal/models"
+	"gofax-billing/pkg/utils"
 	"net/http"
 	"strconv"
 	"strings"
@@ -50,6 +51,8 @@ func NotifyShopApi(form *PaymeRequest, c *gin.Context) {
 		CancelTransaction(form, c)
 	case "CheckTransaction":
 		CheckTransaction(form, c)
+	case "GetStatement":
+		GetStatement(form, c)
 	default:
 		c.JSON(http.StatusOK, NotFound())
 	}
@@ -271,4 +274,17 @@ func CheckAuthHeader(c *gin.Context, expectedKey string) bool {
 	}
 
 	return false
+}
+
+func GetStatement(form *PaymeRequest, c *gin.Context) {
+	var data []models.Transaction
+
+	result := utils.DB.Where("create_time >= ? AND create_time <= ?", form.Params.From, form.Params.To).Find(&data)
+
+	if result.Error != nil {
+		c.JSON(500, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(200, data)
 }
