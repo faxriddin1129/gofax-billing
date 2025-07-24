@@ -32,6 +32,7 @@ type Transaction struct {
 	CardCvv       string  `json:"CardCvv"`
 	Platform      string  `json:"Platform"`
 	Ip            string  `json:"Ip"`
+	Version       int     `gorm:"version"`
 }
 
 func (Transaction) TableName() string {
