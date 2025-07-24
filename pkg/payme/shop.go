@@ -73,7 +73,7 @@ func CheckPerformTransaction(form *PaymeRequest, c *gin.Context) {
 
 	transaction := models.TransactionGetById(orderID)
 	if transaction.ID == 0 {
-		c.JSON(http.StatusOK, NotFound())
+		c.JSON(http.StatusOK, NotParam())
 		return
 	}
 
@@ -116,6 +116,12 @@ func CreateTransaction(form *PaymeRequest, c *gin.Context) {
 	}
 
 	transaction := models.TransactionGetById(orderID)
+
+	if transaction.ID == 0 {
+		c.JSON(http.StatusOK, NotParam())
+		return
+	}
+
 	if transaction.Amount != form.Params.Amount {
 		c.JSON(http.StatusOK, NotCorrectAmount())
 		return
@@ -278,13 +284,48 @@ func CheckAuthHeader(c *gin.Context, expectedKey string) bool {
 
 func GetStatement(form *PaymeRequest, c *gin.Context) {
 	var data []models.Transaction
+	utils.DB.Where("create_time >= ? AND create_time <= ?", form.Params.From, form.Params.To).Find(&data)
 
-	result := utils.DB.Where("create_time >= ? AND create_time <= ?", form.Params.From, form.Params.To).Find(&data)
+	var result []map[string]interface{}
+	for _, v := range data {
 
-	if result.Error != nil {
-		c.JSON(500, gin.H{"error": result.Error.Error()})
-		return
+		var state interface{}
+		state = v.State
+		if state == 0 {
+			state = nil
+		}
+
+		var reason interface{}
+		reason = v.Reason
+		if reason == 0 {
+			reason = nil
+		}
+
+		result = append(result, map[string]interface{}{
+			"id":     v.ID,
+			"time":   v.CreatedAt,
+			"amount": v.Amount,
+			"account": map[string]string{
+				"order_id": v.OrderId,
+			},
+			"create_time":  v.CreateTime,
+			"perform_time": v.PerformTime,
+			"cancel_time":  v.CancelTime,
+			"transaction":  v.TransactionId,
+			"state":        state,
+			"reason":       reason,
+			"receivers": []map[string]interface{}{
+				{
+					"id":     v.ID,
+					"amount": v.Amount,
+				},
+			},
+		})
 	}
 
-	c.JSON(200, data)
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"result": map[string]interface{}{
+			"transactions": result,
+		},
+	})
 }

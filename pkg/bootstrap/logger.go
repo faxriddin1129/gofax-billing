@@ -36,7 +36,7 @@ func RequestResponseLogger() gin.HandlerFunc {
 		c.Next()
 
 		log := fmt.Sprintf(
-			"[%s] %s %s %d %s\nRequestBody: %s\nResponseBody: %s\n\n",
+			"[%s] %s %s %d %s \nRequestBody: %s\nResponseBody: %s\nIP=%s\n\n",
 			time.Now().Format("15:04:05"),
 			c.Request.Method,
 			c.Request.URL.String(),
@@ -44,6 +44,7 @@ func RequestResponseLogger() gin.HandlerFunc {
 			time.Since(start),
 			string(bodyBytes),
 			writer.body.String(),
+			c.ClientIP(),
 		)
 		_, err = f.WriteString(log)
 		if err != nil {

@@ -3,6 +3,7 @@ package payme
 type PaymeRequest struct {
 	Method string       `json:"method"`
 	Params *PaymeParams `json:"params"`
+	ID     int64        `json:"id,omitempty"`
 }
 
 type PaymeParams struct {
