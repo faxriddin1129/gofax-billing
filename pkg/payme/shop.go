@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gofax-billing/internal/constants"
 	"gofax-billing/internal/models"
+	"gofax-billing/pkg/main_server"
 	"gofax-billing/pkg/utils"
 	"net/http"
 	"strconv"
@@ -16,7 +17,7 @@ import (
 func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
 	merchantId := MERCHANT_ID
 	serviceUrl := SERVICE_URL
-	amount := strconv.FormatFloat(transaction.Amount, 'f', 2, 64)
+	amount := strconv.FormatFloat(transaction.Amount, 'f', -1, 64)
 	orderId := strconv.Itoa(int(transaction.ID))
 	returnUrl := transaction.ReturnUrl
 	language := "ru"
@@ -34,7 +35,7 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 
 func NotifyShopApi(form *PaymeRequest, c *gin.Context) {
 
-	basic := "Paycom:" + TEST_KEY
+	basic := "Paycom:" + PROD_KEY
 	if !CheckAuthHeader(c, basic) {
 		c.JSON(http.StatusOK, NoAuth())
 		return
@@ -186,13 +187,19 @@ func PerformTransaction(form *PaymeRequest, c *gin.Context) {
 		_, _ = models.TransactionUpdate(&transaction)
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"result": map[string]interface{}{
-			"perform_time": transaction.PerformTime,
-			"transaction":  strconv.Itoa(int(transaction.ID)),
-			"state":        transaction.State,
-		},
-	})
+	code, _ := main_server.MainServerStatus(transaction)
+	if code == 0 {
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"result": map[string]interface{}{
+				"perform_time": transaction.PerformTime,
+				"transaction":  strconv.Itoa(int(transaction.ID)),
+				"state":        transaction.State,
+			},
+		})
+		return
+	}
+	c.JSON(http.StatusOK, NotParam())
+	return
 }
 
 func CheckTransaction(form *PaymeRequest, c *gin.Context) {

@@ -5,6 +5,7 @@ import (
 	"gofax-billing/internal/constants"
 	"gofax-billing/internal/models"
 	"gofax-billing/pkg/env"
+	"gofax-billing/pkg/main_server"
 	"gofax-billing/pkg/utils"
 	"net/http"
 	"strconv"
@@ -165,5 +166,13 @@ func NotifyShopApi(form *OctoNotifyResponse, c *gin.Context) {
 		return
 	}
 
-	utils.RespondJson(c, nil, http.StatusOK, "Success fully")
+	if form.Status == "succeeded" {
+		code, _ := main_server.MainServerStatus(transaction)
+		if code == 0 {
+			utils.RespondJson(c, nil, http.StatusOK, "Success fully")
+			return
+		}
+	}
+
+	utils.RespondJson(c, nil, http.StatusInternalServerError, "Internal server error. Transaction failed save")
 }

@@ -51,12 +51,17 @@ func FastPayValidate(c *gin.Context) {
 		return
 	}
 
+	finalAmount := form.Amount
+	if form.Provider == constants.ProviderPayme {
+		finalAmount = form.Amount * 100
+	}
+
 	transaction := models.Transaction{
 		Type:        constants.TYPE_FAST_PAY,
 		Status:      constants.STATUS_PENDING,
 		Currency:    form.Currency,
 		Provider:    form.Provider,
-		Amount:      form.Amount,
+		Amount:      finalAmount,
 		State:       0,
 		Reason:      0,
 		UUID:        uuid.New().String(),
