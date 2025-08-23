@@ -28,6 +28,16 @@ func ValidateCurrency(fl validator.FieldLevel) bool {
 	return false
 }
 
+func ValidatePlatform(fl validator.FieldLevel) bool {
+	provider := fl.Field().String()
+	for _, p := range constants.ValidPlatforms {
+		if p == provider {
+			return true
+		}
+	}
+	return false
+}
+
 func init() {
 
 	errPro := validate.RegisterValidation("provider", ValidateProvider)
@@ -38,5 +48,10 @@ func init() {
 	errCur := validate.RegisterValidation("currency", ValidateCurrency)
 	if errCur != nil {
 		log.Fatalf("Validator registration failed: %v", errCur)
+	}
+
+	errPla := validate.RegisterValidation("platform", ValidatePlatform)
+	if errPla != nil {
+		log.Fatalf("Validator registration failed: %v", errPla)
 	}
 }

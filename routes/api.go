@@ -9,18 +9,10 @@ func MainRoutes(r *gin.Engine) {
 
 	r.GET("/api", controllers.Welcome)
 
-	fp := r.Group("/api/fast-pay")
-	{
-		fp.POST("/get-link", controllers.FastPayGetLink)
-		fp.POST("/get-link-by-card", controllers.FastPayByCardGetLink)
-	}
+	r.POST("/api/fast-pay/get-link", controllers.FastPayGetLink)
+	r.POST("/api/fast-pay/get-link-by-card", controllers.FastPayByCardGetLink)
+	r.POST("/api/confirmation-pay", controllers.PayByConfirmation)
 
-	notify := r.Group("/api")
-	{
-		notify.POST("/octo/notify", controllers.OctoShopApiNotify)
-		notify.POST("/payme/notify", controllers.PaymeShopApiNotify)
-		notify.POST("/click/notify-prepare", controllers.PaymeShopApiNotify)
-		notify.POST("/click/notify-complete", controllers.PaymeShopApiNotify)
-		notify.POST("/uzum/notify", controllers.OctoShopApiNotify)
-	}
+	r.POST("/api/octo/notify", controllers.OctoShopApiNotify)
+	r.POST("/api/payme/notify", controllers.PaymeShopApiNotify)
 }

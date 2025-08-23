@@ -14,15 +14,23 @@ import (
 	"time"
 )
 
+var MerchantId string
+
 func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
-	merchantId := MERCHANT_ID
+
+	if transaction.Platform == constants.PlatformHikmat {
+		MerchantId = HIKMAT_MERCHANT_ID
+	} else if transaction.Platform == constants.PlatformAsia {
+		MerchantId = ASIA_MERCHANT_ID
+	}
+
 	serviceUrl := SERVICE_URL
 	amount := strconv.FormatFloat(transaction.Amount, 'f', -1, 64)
 	orderId := strconv.Itoa(int(transaction.ID))
 	returnUrl := transaction.ReturnUrl
 	language := "ru"
 
-	paramStr := "m=" + merchantId + ";ac.order_id=" + orderId + ";a=" + amount + ";c=" + returnUrl + ";l=" + language
+	paramStr := "m=" + MerchantId + ";ac.order_id=" + orderId + ";a=" + amount + ";c=" + returnUrl + ";l=" + language
 	encoded := base64.StdEncoding.EncodeToString([]byte(paramStr))
 	link := serviceUrl + "/" + encoded
 
@@ -35,8 +43,7 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 
 func NotifyShopApi(form *PaymeRequest, c *gin.Context) {
 
-	basic := "Paycom:" + PROD_KEY
-	if !CheckAuthHeader(c, basic) {
+	if !CheckAuthHeader(c) {
 		c.JSON(http.StatusOK, NoAuth())
 		return
 	}
@@ -265,11 +272,15 @@ func CancelTransaction(form *PaymeRequest, c *gin.Context) {
 	c.JSON(http.StatusOK, NotFound())
 }
 
-func CheckAuthHeader(c *gin.Context, expectedKey string) bool {
+func CheckAuthHeader(c *gin.Context) bool {
+
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
 		return false
 	}
+
+	expectedKeyHimat := "Paycom:" + HIKMAT_PROD_KEY
+	expectedKeyAsia := "Paycom:" + ASIA_PROD_KEY
 
 	if strings.HasPrefix(strings.ToLower(authHeader), "basic ") {
 		encoded := strings.TrimSpace(authHeader[6:])
@@ -279,7 +290,7 @@ func CheckAuthHeader(c *gin.Context, expectedKey string) bool {
 		}
 
 		decoded := string(decodedBytes)
-		if decoded != expectedKey {
+		if decoded != expectedKeyHimat || decoded != expectedKeyAsia {
 			return false
 		}
 

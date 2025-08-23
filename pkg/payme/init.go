@@ -5,17 +5,19 @@ import (
 )
 
 var (
-	PROD_KEY    string
-	TEST_KEY    string
-	SERVICE_URL string
-	MERCHANT_ID string
+	SERVICE_URL        string
+	HIKMAT_PROD_KEY    string
+	HIKMAT_MERCHANT_ID string
+	ASIA_PROD_KEY      string
+	ASIA_MERCHANT_ID   string
 )
 
 func LoadEnv() {
-	PROD_KEY = env.GetEnv("PAYME_PROD_KEY")
-	TEST_KEY = env.GetEnv("PAYME_TEST_KEY")
 	SERVICE_URL = env.GetEnv("PAYME_SERVICE_URL")
-	MERCHANT_ID = env.GetEnv("PAYME_MERCHANT_ID")
+	HIKMAT_PROD_KEY = env.GetEnv("PAYME_HIKMAT_PROD_KEY")
+	HIKMAT_MERCHANT_ID = env.GetEnv("PAYME_HIKMAT_MERCHANT_ID")
+	ASIA_PROD_KEY = env.GetEnv("PAYME_ASIA_PROD_KEY")
+	ASIA_MERCHANT_ID = env.GetEnv("PAYME_ASIA_MERCHANT_ID")
 }
 
 func init() {

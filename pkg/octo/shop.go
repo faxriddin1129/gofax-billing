@@ -13,14 +13,27 @@ import (
 	"time"
 )
 
+var OctoShop, OctoSecret string
+var OctoMode bool
+
 func GenerateShopApiLinkByCard(transaction *models.Transaction) (interface{}, int, string) {
 
+	if transaction.Platform == constants.PlatformHikmat {
+		OctoShop = OCTO_HIKMAT_SHOP
+		OctoSecret = OCOT_HIKMAT_SECRET
+		OctoMode = OCTO_HIKMAT_TEST_MODE
+	} else if transaction.Platform == constants.PlatformAsia {
+		OctoShop = OCTO_ASIA_SHOP
+		OctoSecret = OCOT_ASIA_SECRET
+		OctoMode = OCTO_ASIA_TEST_MODE
+	}
+
 	generateData := map[string]interface{}{
-		"octo_shop_id":        OCTO_SHOP,
-		"octo_secret":         OCOT_SECRET,
+		"octo_shop_id":        OctoShop,
+		"octo_secret":         OctoSecret,
 		"shop_transaction_id": "billing_" + strconv.Itoa(int(transaction.ID)),
 		"auto_capture":        true,
-		"test":                OCTO_TEST_MODE,
+		"test":                OctoMode,
 		"init_time":           time.Now().Format("2006-01-02 15:04:05"),
 		"total_sum":           transaction.Amount,
 		"currency":            transaction.Currency,
@@ -85,12 +98,22 @@ func GenerateShopApiLinkByCard(transaction *models.Transaction) (interface{}, in
 
 func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, string) {
 
+	if transaction.Platform == constants.PlatformHikmat {
+		OctoShop = OCTO_HIKMAT_SHOP
+		OctoSecret = OCOT_HIKMAT_SECRET
+		OctoMode = OCTO_HIKMAT_TEST_MODE
+	} else if transaction.Platform == constants.PlatformAsia {
+		OctoShop = OCTO_ASIA_SHOP
+		OctoSecret = OCOT_ASIA_SECRET
+		OctoMode = OCTO_ASIA_TEST_MODE
+	}
+
 	generateData := map[string]interface{}{
-		"octo_shop_id":        OCTO_SHOP,
-		"octo_secret":         OCOT_SECRET,
+		"octo_shop_id":        OctoShop,
+		"octo_secret":         OctoSecret,
 		"shop_transaction_id": "billing_" + strconv.Itoa(int(transaction.ID)),
 		"auto_capture":        true,
-		"test":                OCTO_TEST_MODE,
+		"test":                OctoMode,
 		"init_time":           time.Now().Format("2006-01-02 15:04:05"),
 		"total_sum":           transaction.Amount,
 		"currency":            transaction.Currency,
