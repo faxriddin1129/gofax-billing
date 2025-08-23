@@ -1,25 +1,15 @@
 package constants
 
 const (
-	ProviderClick   = "click"
-	ProviderPayme   = "payme"
-	ProviderPaynet  = "paynet"
-	ProviderOcto    = "octo"
-	ProviderUzum    = "uzum"
-	ProviderIpak    = "ipak"
-	ProviderInfin   = "infin"
-	ProviderTinkoff = "tinkoff"
-	ProviderBcc     = "bcc"
+	ProviderClick = "click"
+	ProviderPayme = "payme"
+	ProviderOcto  = "octo"
+	ProviderIpak  = "ipak"
 )
 
 var ValidProviders = []string{
 	ProviderClick,
 	ProviderPayme,
-	ProviderPaynet,
 	ProviderOcto,
-	ProviderUzum,
 	ProviderIpak,
-	ProviderInfin,
-	ProviderTinkoff,
-	ProviderBcc,
 }
