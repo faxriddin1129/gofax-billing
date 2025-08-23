@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"gofax-billing/internal/constants"
 	"gofax-billing/internal/models"
-	"gofax-billing/pkg/octo"
+	"gofax-billing/pkg/ipak"
 	"gofax-billing/pkg/utils"
 	"net/http"
 	"time"
@@ -31,7 +31,7 @@ type ConfirmationByCardForm struct {
 }
 
 func ConfirmationByCardValidate(c *gin.Context) {
-	var form FastPayByCardForm
+	var form ConfirmationByCardForm
 
 	if err := c.ShouldBindJSON(&form); err != nil {
 		utils.RespondJson(c, nil, http.StatusBadRequest, err.Error())
@@ -84,7 +84,7 @@ func ConfirmationByCardValidate(c *gin.Context) {
 	}
 
 	if transaction.Provider == constants.ProviderIpak {
-		data, code, msg := octo.GenerateShopApiLinkByCard(&transaction)
+		data, code, msg := ipak.CreateTransfer(&transaction)
 		utils.RespondJson(c, data, code, msg)
 		return
 	}
