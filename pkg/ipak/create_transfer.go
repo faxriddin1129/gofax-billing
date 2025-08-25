@@ -67,5 +67,9 @@ func CreateTransfer(transaction *models.Transaction) (interface{}, int, string) 
 	transaction.UUID = remote.Result.TransferId
 	_, _ = models.TransactionUpdate(transaction)
 
-	return remote, http.StatusOK, "Conformation code send to your phone"
+	return map[string]interface{}{
+		"ID":     transaction.ID,
+		"Link":   nil,
+		"Method": nil,
+	}, http.StatusOK, "Conformation code send to your phone"
 }
