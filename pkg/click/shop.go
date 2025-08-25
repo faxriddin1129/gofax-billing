@@ -5,6 +5,8 @@ import (
 	"gofax-billing/internal/models"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 var MerchantId, MerchantUserId, ServiceId string
@@ -26,11 +28,71 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 	returnUrl := transaction.ReturnUrl
 	serviceUrl := SERVICE_URL
 
-	link := serviceUrl + "?amount=" + amount + "&merchant_id=" + MerchantId + "&merchant_user_id=" + MerchantUserId + "&service_id=" + ServiceId + "&transaction_param=" + merchantTransId + "&return_url=" + returnUrl
+	link := serviceUrl + "?amount=" + amount + "&merchant_id=" + MerchantId + "&merchant_user_id=" + MerchantUserId + "&service_id=" + ServiceId + "&transaction_param=" + merchantTransId + "&merchant_trans_id=" + merchantTransId + "&return_url=" + returnUrl
 
 	return map[string]interface{}{
 		"ID":     transaction.ID,
 		"Link":   link,
 		"Method": "GET",
 	}, http.StatusOK, "FastPay successful"
+}
+
+func NotifyShopApi(form *ResponseShopApi, c *gin.Context) {
+	if form.MerchantPrepareId != 0 {
+		prepare(form, c)
+		return
+	}
+	complete(form, c)
+	return
+}
+
+func prepare(form *ResponseShopApi, c *gin.Context) {
+
+	errorCode := 0
+	transactionId, _ := strconv.ParseInt(form.MerchantTransId, 10, 64)
+
+	transactionModel := models.TransactionGetById(transactionId)
+	if transactionModel.ID == 0 || transactionModel.Amount != form.Amount {
+		errorCode = 1
+	}
+
+	res := map[string]interface{}{
+		"click_trans_id":      form.ClickTransId,
+		"merchant_trans_id":   form.MerchantTransId,
+		"merchant_prepare_id": form.MerchantTransId,
+		"merchant_confirm_id": form.MerchantTransId,
+		"error":               errorCode,
+		"error_note":          form.ErrorNote,
+	}
+
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+func complete(form *ResponseShopApi, c *gin.Context) {
+	errorCode := 0
+	transactionId, _ := strconv.ParseInt(form.MerchantTransId, 10, 64)
+
+	transactionModel := models.TransactionGetById(transactionId)
+	if transactionModel.ID == 0 || transactionModel.Amount != form.Amount {
+		errorCode = 1
+	}
+
+	if errorCode == 0 {
+		transactionModel.Status = constants.STATUS_SUCCESS
+		transactionModel.PaymentStatus = 1
+		_, _ = models.TransactionUpdate(&transactionModel)
+	}
+
+	res := map[string]interface{}{
+		"click_trans_id":      form.ClickTransId,
+		"merchant_trans_id":   form.MerchantTransId,
+		"merchant_prepare_id": form.MerchantTransId,
+		"merchant_confirm_id": form.MerchantTransId,
+		"error":               errorCode,
+		"error_note":          form.ErrorNote,
+	}
+
+	c.JSON(http.StatusOK, res)
+	return
 }

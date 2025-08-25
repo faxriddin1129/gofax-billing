@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"gofax-billing/pkg/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Welcome(c *gin.Context) {

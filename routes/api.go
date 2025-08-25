@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"gofax-billing/internal/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func MainRoutes(r *gin.Engine) {
@@ -15,4 +16,5 @@ func MainRoutes(r *gin.Engine) {
 
 	r.POST("/api/octo/notify", controllers.OctoShopApiNotify)
 	r.POST("/api/payme/notify", controllers.PaymeShopApiNotify)
+	r.POST("/api/click/notify", controllers.ClickShopApiNotify)
 }

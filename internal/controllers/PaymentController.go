@@ -1,9 +1,14 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"gofax-billing/internal/requests"
+
+	"github.com/gin-gonic/gin"
 )
+
+func PayByConfirmation(c *gin.Context) {
+	requests.ConfirmationByCardValidate(c)
+}
 
 func FastPayGetLink(c *gin.Context) {
 	requests.FastPayValidate(c)
