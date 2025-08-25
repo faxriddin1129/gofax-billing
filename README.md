@@ -73,17 +73,17 @@ chmod +x myapp
 ## SERVER DEPLOY
 Create service file
 ```
-sudo nano /etc/systemd/system/myapp.service
+sudo nano /etc/systemd/system/alt_billing.service
 ```
 
 ```
 [Unit]
-Description=Go MyApp Application
+Description=Go Billing Application
 After=network.target
 
 [Service]
-ExecStart=/home/myapp/myapp
-WorkingDirectory=/home/myapp
+ExecStart=/var/www/billing.asialuxe.uz/myapp
+WorkingDirectory=/var/www/billing.asialuxe.uz
 Restart=always
 User=ubuntu
 
@@ -94,17 +94,17 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 ```
 ```
-sudo systemctl enable myapp
+sudo systemctl enable alt_billing
 ```
 ```
-sudo systemctl start myapp
+sudo systemctl start alt_billing
 ```
 ```
-sudo systemctl status myapp
+sudo systemctl status alt_billing
 ```
 ```
-sudo systemctl stop myapp
+sudo systemctl stop alt_billing
 ```
 ```
-sudo systemctl restart myapp
+sudo systemctl restart alt_billing
 ```

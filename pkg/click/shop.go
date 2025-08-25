@@ -3,6 +3,7 @@ package click
 import (
 	"gofax-billing/internal/constants"
 	"gofax-billing/internal/models"
+	"gofax-billing/pkg/main_server"
 	"net/http"
 	"strconv"
 
@@ -38,7 +39,7 @@ func GenerateShopApiLink(transaction *models.Transaction) (interface{}, int, str
 }
 
 func NotifyShopApi(form *ResponseShopApi, c *gin.Context) {
-	if form.MerchantPrepareId != 0 {
+	if form.MerchantPrepareId == 0 {
 		prepare(form, c)
 		return
 	}
@@ -52,7 +53,7 @@ func prepare(form *ResponseShopApi, c *gin.Context) {
 	transactionId, _ := strconv.ParseInt(form.MerchantTransId, 10, 64)
 
 	transactionModel := models.TransactionGetById(transactionId)
-	if transactionModel.ID == 0 || transactionModel.Amount != form.Amount {
+	if transactionModel.ID == 0 {
 		errorCode = 1
 	}
 
@@ -74,7 +75,7 @@ func complete(form *ResponseShopApi, c *gin.Context) {
 	transactionId, _ := strconv.ParseInt(form.MerchantTransId, 10, 64)
 
 	transactionModel := models.TransactionGetById(transactionId)
-	if transactionModel.ID == 0 || transactionModel.Amount != form.Amount {
+	if transactionModel.ID == 0 {
 		errorCode = 1
 	}
 
@@ -82,12 +83,17 @@ func complete(form *ResponseShopApi, c *gin.Context) {
 		transactionModel.Status = constants.STATUS_SUCCESS
 		transactionModel.PaymentStatus = 1
 		_, _ = models.TransactionUpdate(&transactionModel)
+
+		code, _ := main_server.MainServerStatus(transactionModel)
+		if code != 0 {
+			errorCode = 1
+		}
+
 	}
 
 	res := map[string]interface{}{
 		"click_trans_id":      form.ClickTransId,
 		"merchant_trans_id":   form.MerchantTransId,
-		"merchant_prepare_id": form.MerchantTransId,
 		"merchant_confirm_id": form.MerchantTransId,
 		"error":               errorCode,
 		"error_note":          form.ErrorNote,

@@ -35,7 +35,7 @@ func PaymeShopApiNotify(c *gin.Context) {
 func ClickShopApiNotify(c *gin.Context) {
 	var form click.ResponseShopApi
 
-	if err := c.ShouldBindJSON(&form); err != nil {
+	if err := c.ShouldBind(&form); err != nil {
 		utils.RespondJson(c, nil, http.StatusBadRequest, err.Error())
 		return
 	}
