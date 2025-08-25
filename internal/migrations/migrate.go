@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"gofax-billing/internal/models"
+
 	"gorm.io/gorm"
 )
 
