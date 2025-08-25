@@ -15,6 +15,14 @@ func CreateTransfer(transaction *models.Transaction) (interface{}, int, string) 
 		TOKEN = ASIA_TOKEN
 	}
 
+	if TOKEN == "" {
+		return map[string]interface{}{
+			"ID":     0,
+			"Link":   nil,
+			"Method": nil,
+		}, http.StatusBadRequest, "Token not found"
+	}
+
 	generateData := map[string]interface{}{
 		"jsonrpc": "2.0",
 		"method":  "transfer.create",
@@ -56,5 +64,8 @@ func CreateTransfer(transaction *models.Transaction) (interface{}, int, string) 
 		}, http.StatusBadRequest, remote.Error.Message
 	}
 
-	return remote, http.StatusOK, "FastPay successful"
+	transaction.UUID = remote.Result.TransferId
+	_, _ = models.TransactionUpdate(transaction)
+
+	return remote, http.StatusOK, "Conformation code send to your phone"
 }
